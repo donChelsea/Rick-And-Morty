@@ -5,7 +5,6 @@ interface Contract {
     interface View {
         fun showProgress()
         fun hideProgress()
-        fun setString(string: String?)
     }
 
     interface Model {
@@ -17,7 +16,7 @@ interface Contract {
     }
 
     interface Presenter {
-        interface OnNetworkCall {
+        interface OnCharactersRequested {
             suspend fun fetchCharacters()
         }
 
