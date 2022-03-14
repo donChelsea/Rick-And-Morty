@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
 import com.example.rickandmorty.databinding.ActivityMainBinding
 import com.example.rickandmorty.presenter.MainPresenter
+import com.example.rickandmorty.ui.info.InfoFragmentBottomSheet
 
 class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityMainBinding
@@ -23,11 +25,20 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
         presenter.characters.observe(this) { characters ->
             characters?.let {
-                binding.recyclerview.adapter = CharactersAdapter(it)
+                binding.recyclerview.adapter =
+                    CharactersAdapter(it) { character -> onCharacterClicked(character) }
                 hideProgress()
             }
         }
 
+    }
+
+    private fun onCharacterClicked(character: CharactersQuery.Result?) {
+        val infoFragment = InfoFragmentBottomSheet.newInstance(character?.id)
+        infoFragment.show(
+            supportFragmentManager,
+            InfoFragmentBottomSheet.TAG
+        )
     }
 
     override fun showProgress() {
@@ -43,4 +54,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
             recyclerview.visibility = View.VISIBLE
         }
     }
+
+
 }

@@ -20,6 +20,10 @@ interface Contract {
             suspend fun fetchCharacters()
         }
 
+        interface OnCharacterRequested {
+            suspend fun fetchCharacter(id: String)
+        }
+
         fun onDestroy()
     }
 }

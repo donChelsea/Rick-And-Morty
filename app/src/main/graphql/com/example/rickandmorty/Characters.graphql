@@ -3,11 +3,21 @@ query Characters {
         results {
             id
             name
-            species
             image
-            location {
-                name
-            }
+        }
+    }
+}
+
+query Character($characterId: ID!) {
+    character(id: $characterId) {
+        name
+        location {
+            name
+        }
+        image
+        species
+        origin {
+            name
         }
     }
 }

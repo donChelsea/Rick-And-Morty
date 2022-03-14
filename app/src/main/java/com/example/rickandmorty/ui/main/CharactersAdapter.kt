@@ -7,7 +7,10 @@ import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.databinding.ItemViewCharactersBinding
 import com.squareup.picasso.Picasso
 
-class CharactersAdapter(private val characters: List<CharactersQuery.Result?>) :
+class CharactersAdapter(
+    private val characters: List<CharactersQuery.Result?>,
+    private val clickListener: (CharactersQuery.Result?) -> Unit
+) :
     RecyclerView.Adapter<CharactersAdapter.CharactersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharactersViewHolder {
@@ -33,6 +36,7 @@ class CharactersAdapter(private val characters: List<CharactersQuery.Result?>) :
             binding.apply {
                 characterName.text = character?.name
                 Picasso.get().load(character?.image).into(characterImage)
+                itemView.setOnClickListener { clickListener(character) }
             }
         }
     }
