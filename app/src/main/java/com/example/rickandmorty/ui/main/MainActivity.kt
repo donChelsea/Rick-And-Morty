@@ -25,13 +25,13 @@ class MainActivity : AppCompatActivity(), Contract.View {
         setContentView(binding.root)
 
         lifecycleScope.launchWhenResumed {
-            presenter.fetchCharacters()
+            presenter.getData()
         }
 
         presenter.characters.observe(this) { characters ->
-            characters?.let {
-                binding.recyclerview.adapter =
-                    CharactersAdapter(it) { character -> onCharacterClicked(character) }
+            binding.apply {
+                recyclerview.adapter =
+                    CharactersAdapter(characters) { character -> onCharacterClicked(character) }
                 hideProgress()
             }
         }
@@ -82,5 +82,9 @@ class MainActivity : AppCompatActivity(), Contract.View {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+    }
 
 }

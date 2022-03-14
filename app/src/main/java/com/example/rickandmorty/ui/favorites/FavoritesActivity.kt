@@ -58,4 +58,9 @@ class FavoritesActivity : AppCompatActivity(), Contract.View {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+    }
 }

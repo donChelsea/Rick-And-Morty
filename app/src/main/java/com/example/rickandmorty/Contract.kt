@@ -8,25 +8,18 @@ interface Contract {
     }
 
     interface Model {
-        interface OnFinishedListener {
+        interface OnFinishedLiOstener {
             fun onFinished(string: String?)
         }
 
-        fun getNextCourse(onFinishedListener: OnFinishedListener?)
+        suspend fun onCharactersRequested()
+
+        suspend fun onCharacterRequested(id: String)
     }
 
     interface Presenter {
-        interface OnCharactersRequested {
-            suspend fun fetchCharacters()
-        }
 
-        interface OnCharacterRequested {
-            suspend fun fetchCharacter(id: String)
-        }
-
-        interface OnFavoritesRequested {
-            suspend fun fetchFavorites()
-        }
+        suspend fun getData()
 
         fun onDestroy()
     }

@@ -15,6 +15,11 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     private lateinit var binding: InfoBottomSheetDialogBinding
     private val presenter = InfoPresenter(this)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.characterId = arguments?.getString(ARG_ID).toString()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,10 +31,8 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val id = arguments?.getString(ARG_ID).toString()
-
         lifecycleScope.launchWhenStarted {
-            presenter.fetchCharacter(id)
+            presenter.getData()
         }
 
         presenter.character.observe(viewLifecycleOwner) { char ->
@@ -62,7 +65,7 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
 
     companion object {
         const val TAG = "InfoFragmentBottomSheet"
-        const val ARG_ID = "id"
+        private const val ARG_ID = "id"
 
         fun newInstance(id: String?): InfoFragmentBottomSheet {
             val infoBottomSheet = InfoFragmentBottomSheet()
@@ -71,6 +74,11 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
             infoBottomSheet.arguments = bundle
             return infoBottomSheet
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
     }
 }
 

@@ -4,25 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
-import com.example.rickandmorty.network.apolloClient
+import com.example.rickandmorty.di.DepedencyInjection
 
 class MainPresenter (
     private var view: Contract.View?,
-) : Contract.Presenter,
-    Contract.Presenter.OnCharactersRequested {
+) : Contract.Presenter {
 
     private val _characters = MutableLiveData<List<CharactersQuery.Result?>>()
     val characters: LiveData<List<CharactersQuery.Result?>> = _characters
 
-    override suspend fun fetchCharacters() {
+    private val characterModel = DepedencyInjection.characterModel
+
+    override suspend fun getData() {
         if (view != null) {
-            view!!.showProgress()
+            view?.showProgress()
         }
 
-        val response = apolloClient.query(CharactersQuery()).execute()
-        response.data?.characters?.results.let {
-            _characters.value = it
-        }
+        characterModel.onCharactersRequested()
+        _characters.value = characterModel.characters.value
     }
 
     override fun onDestroy() {
