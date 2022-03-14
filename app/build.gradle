@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id("com.apollographql.apollo3").version("3.1.0")
-    id 'kotlin-parcelize'
 }
 
 android {
