@@ -13,11 +13,12 @@ class MainPresenter (
 ) : Contract.Presenter,
     Contract.Presenter.OnNetworkCall {
 
-    private val _characters = MutableLiveData<ApolloResponse<CharactersQuery.Data>>()
-    val characters: LiveData<ApolloResponse<CharactersQuery.Data>> = _characters
+    private val _characters = MutableLiveData<List<CharactersQuery.Result?>>()
+    val characters: LiveData<List<CharactersQuery.Result?>> = _characters
 
     override suspend fun fetchCharacters() {
-        _characters.value = apolloClient.query(CharactersQuery()).execute()
+        val response = apolloClient.query(CharactersQuery()).execute()
+        _characters.value = response.data?.characters?.results
 
         mainView?.showProgress()
     }
