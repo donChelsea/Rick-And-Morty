@@ -1,15 +1,16 @@
 package com.example.rickandmorty.ui.info
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.Contract
+import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.InfoBottomSheetDialogBinding
 import com.example.rickandmorty.presenter.InfoPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.squareup.picasso.Picasso
 
 class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     private lateinit var binding: InfoBottomSheetDialogBinding
@@ -36,6 +37,10 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
             binding.apply {
                 char?.let {
                     name.text = it.name
+                    species.text = String.format(getString(R.string.species), it.species)
+                    origin.text = String.format(getString(R.string.origin), it.origin?.name)
+                    location.text = String.format(getString(R.string.location), it.location?.name)
+                    Picasso.get().load(it.image).into(image)
                     hideProgress()
                 }
             }
