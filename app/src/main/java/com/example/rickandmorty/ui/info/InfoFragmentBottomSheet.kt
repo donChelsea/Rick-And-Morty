@@ -8,7 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.Contract
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.InfoBottomSheetDialogBinding
-import com.example.rickandmorty.presenter.InfoPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
 

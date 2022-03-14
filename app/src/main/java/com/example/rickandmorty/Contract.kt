@@ -24,6 +24,10 @@ interface Contract {
             suspend fun fetchCharacter(id: String)
         }
 
+        interface OnFavoritesRequested {
+            suspend fun fetchFavorites()
+        }
+
         fun onDestroy()
     }
 }

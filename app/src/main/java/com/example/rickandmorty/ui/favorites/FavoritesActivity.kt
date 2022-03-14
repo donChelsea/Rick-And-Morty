@@ -1,62 +1,39 @@
-package com.example.rickandmorty.ui.main
+package com.example.rickandmorty.ui.favorites
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
 import com.example.rickandmorty.R
-import com.example.rickandmorty.databinding.ActivityMainBinding
-import com.example.rickandmorty.ui.favorites.FavoritesActivity
-import com.example.rickandmorty.ui.info.InfoFragmentBottomSheet
+import com.example.rickandmorty.databinding.ActivityFavoritesBinding
+import com.example.rickandmorty.ui.main.MainActivity
+import com.example.rickandmorty.ui.main.MainPresenter
 
-class MainActivity : AppCompatActivity(), Contract.View {
-    private lateinit var binding: ActivityMainBinding
-    private val presenter = MainPresenter(this)
+class FavoritesActivity : AppCompatActivity(), Contract.View {
+    private lateinit var binding: ActivityFavoritesBinding
+    private val presenter = FavoritesPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        lifecycleScope.launchWhenResumed {
-            presenter.fetchCharacters()
-        }
-
-        presenter.characters.observe(this) { characters ->
-            characters?.let {
-                binding.recyclerview.adapter =
-                    CharactersAdapter(it) { character -> onCharacterClicked(character) }
-                hideProgress()
-            }
-        }
-
-    }
-
-    private fun onCharacterClicked(character: CharactersQuery.Result?) {
-        val infoFragment = InfoFragmentBottomSheet.newInstance(character?.id)
-        infoFragment.show(
-            supportFragmentManager,
-            InfoFragmentBottomSheet.TAG
-        )
     }
 
     override fun showProgress() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
-            recyclerview.visibility = View.INVISIBLE
+//            recyclerview.visibility = View.INVISIBLE
         }
     }
 
     override fun hideProgress() {
         binding.apply {
             progressBar.visibility = View.GONE
-            recyclerview.visibility = View.VISIBLE
+//            recyclerview.visibility = View.VISIBLE
         }
     }
 
@@ -81,6 +58,4 @@ class MainActivity : AppCompatActivity(), Contract.View {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
 }

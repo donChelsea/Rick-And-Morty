@@ -4,10 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/rounded_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_favorites.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_info.xml" value="0.10612968591691996" />
         <entry key="app/src/main/res/layout/info_bottom_sheet_dialog.xml" value="0.1179245283018868" />
         <entry key="app/src/main/res/layout/item_view_characters.xml" value="0.335" />
+        <entry key="app/src/main/res/menu/options_menu.xml" value="0.1" />
       </map>
     </option>
   </component>

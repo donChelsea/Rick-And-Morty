@@ -3,5 +3,7 @@
     <string name="origin">Origin: %1$s</string>
     <string name="species">Species: %1$s</string>
     <string name="location">Located at: %1$s</string>
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
 
 </resources>

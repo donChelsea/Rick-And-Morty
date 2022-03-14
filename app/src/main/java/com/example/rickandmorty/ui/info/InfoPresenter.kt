@@ -1,22 +1,21 @@
-package com.example.rickandmorty.presenter
+package com.example.rickandmorty.ui.info
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.rickandmorty.CharacterQuery
-import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
 import com.example.rickandmorty.network.apolloClient
 
 class InfoPresenter(
-    private var mainView: Contract.View?,
+    private var view: Contract.View?,
 ) : Contract.Presenter, Contract.Presenter.OnCharacterRequested {
 
     private val _character = MutableLiveData<CharacterQuery.Character?>()
     val character: LiveData<CharacterQuery.Character?> = _character
 
     override suspend fun fetchCharacter(id: String) {
-        if (mainView != null) {
-            mainView!!.showProgress()
+        if (view != null) {
+            view!!.showProgress()
         }
 
         val response = apolloClient.query(CharacterQuery(id)).execute()
@@ -25,7 +24,7 @@ class InfoPresenter(
 
 
     override fun onDestroy() {
-        mainView = null
+        view = null
     }
 
 }
