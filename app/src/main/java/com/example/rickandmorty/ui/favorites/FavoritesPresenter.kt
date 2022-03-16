@@ -1,7 +1,7 @@
 package com.example.rickandmorty.ui.favorites
 
-import com.example.rickandmorty.Contract
-import com.example.rickandmorty.SharedPreferencesModel
+import com.example.rickandmorty.models.Contract
+import com.example.rickandmorty.models.SharedPreferencesModel
 
 class FavoritesPresenter(
     private var view: Contract.View?,

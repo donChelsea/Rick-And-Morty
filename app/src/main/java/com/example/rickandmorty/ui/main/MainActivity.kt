@@ -1,5 +1,6 @@
 package com.example.rickandmorty.ui.main
 
+import CharacterModel
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -9,8 +10,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.rickandmorty.*
+import com.example.rickandmorty.CharacterQuery
+import com.example.rickandmorty.CharactersQuery
+import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.ActivityMainBinding
+import com.example.rickandmorty.models.Contract
 import com.example.rickandmorty.ui.details.DetailsFragmentBottomSheet
 import com.example.rickandmorty.ui.favorites.FavoritesActivity
 

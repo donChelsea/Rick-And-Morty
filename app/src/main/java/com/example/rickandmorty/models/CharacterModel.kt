@@ -1,21 +1,6 @@
-package com.example.rickandmorty
-
-import android.content.Context
 import com.apollographql.apollo3.ApolloClient
-
-interface Contract {
-
-    interface View {
-        fun showProgress()
-        fun hideProgress()
-        fun setData(
-            charactersUpdate: List<CharactersQuery.Result?>? = null,
-            characterUpdate: CharacterQuery.Character? = null,
-            savedData: List<Pair<String, Any?>>? = null
-        )
-        fun showError(error: String)
-    }
-}
+import com.example.rickandmorty.CharacterQuery
+import com.example.rickandmorty.CharactersQuery
 
 class CharacterModel {
 
@@ -37,7 +22,6 @@ class CharacterModel {
         } else {
             onFinishedListener.onResultFailure("Could not retrieve all characters.")
         }
-
     }
 
     suspend fun requestCharacter(id: String, onFinishedListener: OnFinishedListener) {
@@ -58,39 +42,3 @@ class CharacterModel {
     }
 }
 
-class SharedPreferencesModel(context: Context) {
-
-    interface OnFinishedListener {
-        suspend fun onResultSuccess(data: List<Pair<String, Any?>>)
-
-        suspend fun onResultFailure(error: String)
-    }
-
-    private var pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-    private var editor = pref.edit()
-
-    suspend fun getCharacters(onFinishedListener: OnFinishedListener) {
-        val response = pref.all.toList()
-        if (response.isNotEmpty()) {
-            onFinishedListener.onResultSuccess(response)
-        } else {
-            onFinishedListener.onResultFailure("No characters stored.")
-        }
-    }
-
-    fun put(id: String, name: String) {
-        editor.putString(id, name)
-        editor.apply()
-    }
-
-    fun remove(id: String) {
-        editor.remove(id)
-        editor.apply()
-    }
-
-    companion object {
-        private const val PREF_NAME: String = "RickAndMortyApp"
-        private var PRIVATE_MODE: Int = 0
-    }
-
-}

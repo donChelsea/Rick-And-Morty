@@ -1,16 +1,22 @@
 package com.example.rickandmorty.ui.details
 
+import CharacterModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.example.rickandmorty.*
+import com.example.rickandmorty.CharacterQuery
+import com.example.rickandmorty.CharactersQuery
+import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.DetailsBottomSheetDialogBinding
+import com.example.rickandmorty.models.Contract
+import com.example.rickandmorty.models.SharedPreferencesModel
 import com.example.rickandmorty.ui.favorites.FavoritesPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.launch
 
 class DetailsFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     private lateinit var binding: DetailsBottomSheetDialogBinding
@@ -37,7 +43,7 @@ class DetailsFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
 
         favsPresenter = FavoritesPresenter(this, SharedPreferencesModel(requireContext()))
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launchWhenResumed {
             detailsPresenter.getCharacter(detailsPresenter.characterId)
         }
     }
@@ -57,7 +63,7 @@ class DetailsFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
                 hideProgress()
 
                 favoriteIcon.setOnClickListener {
-                    lifecycleScope.launchWhenResumed {
+                    lifecycleScope.launch {
                         favsPresenter.add(detailsPresenter.characterId, char.name.toString())
                         Toast.makeText(requireContext(), "Added ${char.name.toString()} to favorites!", Toast.LENGTH_SHORT).show()
                     }
@@ -67,7 +73,7 @@ class DetailsFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     }
 
     override fun showError(error: String) {
-        showProgress()
+        hideProgress()
         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
     }
 

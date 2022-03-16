@@ -1,9 +1,9 @@
 package com.example.rickandmorty.ui.details
 
-import com.example.rickandmorty.CharacterModel
+import CharacterModel
 import com.example.rickandmorty.CharacterQuery
 import com.example.rickandmorty.CharactersQuery
-import com.example.rickandmorty.Contract
+import com.example.rickandmorty.models.Contract
 
 class DetailsPresenter(
     private var view: Contract.View?,

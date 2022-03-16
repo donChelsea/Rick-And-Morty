@@ -6,8 +6,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.rickandmorty.*
+import com.example.rickandmorty.CharacterQuery
+import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.databinding.ActivityFavoritesBinding
+import com.example.rickandmorty.models.Contract
+import com.example.rickandmorty.models.SharedPreferencesModel
 import kotlinx.coroutines.launch
 
 class FavoritesActivity : AppCompatActivity(), Contract.View {
@@ -21,7 +24,7 @@ class FavoritesActivity : AppCompatActivity(), Contract.View {
 
         presenter = FavoritesPresenter(this, SharedPreferencesModel(this))
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launchWhenResumed {
             presenter.getData()
         }
     }
@@ -60,7 +63,7 @@ class FavoritesActivity : AppCompatActivity(), Contract.View {
     }
 
     override fun showError(error: String) {
-        showProgress()
+        hideProgress()
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
 
