@@ -1,22 +1,26 @@
 package com.example.rickandmorty.ui.info
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.example.rickandmorty.Contract
-import com.example.rickandmorty.R
+import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.InfoBottomSheetDialogBinding
+import com.example.rickandmorty.ui.main.CharactersAdapter
+import com.example.rickandmorty.ui.main.MainPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
 
 class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     private lateinit var binding: InfoBottomSheetDialogBinding
-    private val presenter = InfoPresenter(this)
+    private lateinit var presenter: InfoPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter = InfoPresenter(this, CharacterModel())
         presenter.characterId = arguments?.getString(ARG_ID).toString()
     }
 
@@ -32,21 +36,29 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launchWhenStarted {
-            presenter.getData()
+            presenter.getCharacter(presenter.characterId)
         }
+    }
 
-        presenter.character.observe(viewLifecycleOwner) { char ->
-            binding.apply {
-                char?.let {
-                    name.text = it.name
-                    species.text = String.format(getString(R.string.species), it.species)
-                    origin.text = String.format(getString(R.string.origin), it.origin?.name)
-                    location.text = String.format(getString(R.string.location), it.location?.name)
-                    Picasso.get().load(it.image).into(image)
-                    hideProgress()
-                }
+    override fun setData(
+        charactersUpdate: List<CharactersQuery.Result?>?,
+        characterUpdate: CharacterQuery.Character?
+    ) {
+        binding.apply {
+            characterUpdate?.let {
+                name.text = it.name
+                species.text = String.format(getString(R.string.species), it.species)
+                origin.text = String.format(getString(R.string.origin), it.origin?.name)
+                location.text = String.format(getString(R.string.location), it.location?.name)
+                Picasso.get().load(it.image).into(image)
+                hideProgress()
             }
         }
+    }
+
+    override fun showError(error: String) {
+        showProgress()
+        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
     }
 
     override fun showProgress() {
@@ -63,6 +75,11 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+    }
+
     companion object {
         const val TAG = "InfoFragmentBottomSheet"
         private const val ARG_ID = "id"
@@ -74,11 +91,6 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
             infoBottomSheet.arguments = bundle
             return infoBottomSheet
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onDestroy()
     }
 }
 

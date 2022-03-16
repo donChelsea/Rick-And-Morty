@@ -6,36 +6,40 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.rickandmorty.CharactersQuery
-import com.example.rickandmorty.Contract
-import com.example.rickandmorty.R
+import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.ActivityMainBinding
-import com.example.rickandmorty.ui.favorites.FavoritesActivity
 import com.example.rickandmorty.ui.info.InfoFragmentBottomSheet
 
 class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityMainBinding
-    private val presenter = MainPresenter(this)
+    private lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleScope.launchWhenResumed {
-            presenter.getData()
-        }
+        presenter = MainPresenter(this, CharacterModel())
 
-        presenter.characters.observe(this) { characters ->
-            binding.apply {
+        lifecycleScope.launchWhenResumed {
+            presenter.getCharacters()
+        }
+    }
+
+    override fun setData(
+        charactersUpdate: List<CharactersQuery.Result?>?,
+        characterUpdate: CharacterQuery.Character?
+    ) {
+        binding.apply {
+            charactersUpdate?.let {
                 recyclerview.adapter =
-                    CharactersAdapter(characters) { character -> onCharacterClicked(character) }
+                    CharactersAdapter(it) { character -> onCharacterClicked(character) }
                 hideProgress()
             }
         }
-
     }
 
     private fun onCharacterClicked(character: CharactersQuery.Result?) {
@@ -44,6 +48,17 @@ class MainActivity : AppCompatActivity(), Contract.View {
             supportFragmentManager,
             InfoFragmentBottomSheet.TAG
         )
+    }
+
+    override fun showError(error: String) {
+        showProgress()
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.options_menu, menu)
+        return true
     }
 
     override fun showProgress() {
@@ -60,12 +75,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.options_menu, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_home -> {
@@ -74,8 +83,8 @@ class MainActivity : AppCompatActivity(), Contract.View {
                 true
             }
             R.id.action_favorites -> {
-                val intent = Intent(this, FavoritesActivity::class.java)
-                startActivity(intent)
+//                val intent = Intent(this, FavoritesActivity::class.java)
+//                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

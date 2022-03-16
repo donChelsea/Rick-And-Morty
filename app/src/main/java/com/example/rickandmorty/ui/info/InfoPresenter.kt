@@ -1,36 +1,38 @@
 package com.example.rickandmorty.ui.info
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.rickandmorty.CharacterModel
 import com.example.rickandmorty.CharacterQuery
 import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
-import com.example.rickandmorty.di.DepedencyInjection
-import com.example.rickandmorty.network.apolloClient
 
 class InfoPresenter(
     private var view: Contract.View?,
-) : Contract.Presenter {
+    private val model: CharacterModel
+) : CharacterModel.OnFinishedListener {
 
-    private val _character = MutableLiveData<CharacterQuery.Character?>()
-    val character: LiveData<CharacterQuery.Character?> = _character
+    var characterId: String = ""
 
-    private val characterModel = DepedencyInjection.characterModel
-    var characterId = ""
-
-    override suspend fun getData() {
-        if (view != null) {
-            view?.showProgress()
-        }
-
-        if (characterId.isNotEmpty()) {
-            characterModel.onCharacterRequested(characterId)
-            _character.value = characterModel.character.value
-        }
-
+    suspend fun getCharacter(id: String) {
+        view?.showProgress()
+        model.requestCharacter(id, this)
     }
 
-    override fun onDestroy() {
+    override suspend fun onResultSuccess(
+        charactersUpdate: List<CharactersQuery.Result?>?,
+        characterUpdate: CharacterQuery.Character?
+    ) {
+        if (characterUpdate != null) {
+            view?.hideProgress()
+            view?.setData(characterUpdate = characterUpdate)
+        }
+    }
+
+    override suspend fun onResultFail(error: String) {
+        view?.hideProgress()
+        view?.showError(error)
+    }
+
+    fun onDestroy() {
         view = null
     }
 

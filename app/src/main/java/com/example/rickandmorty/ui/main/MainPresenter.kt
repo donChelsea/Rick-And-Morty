@@ -1,32 +1,36 @@
 package com.example.rickandmorty.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.rickandmorty.CharacterModel
+import com.example.rickandmorty.CharacterQuery
 import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
-import com.example.rickandmorty.di.DepedencyInjection
 
 class MainPresenter (
     private var view: Contract.View?,
-) : Contract.Presenter {
+    private val model: CharacterModel
+) : CharacterModel.OnFinishedListener {
 
-    private val _characters = MutableLiveData<List<CharactersQuery.Result?>>()
-    val characters: LiveData<List<CharactersQuery.Result?>> = _characters
-
-    private val characterModel = DepedencyInjection.characterModel
-
-    override suspend fun getData() {
-        if (view != null) {
-            view?.showProgress()
-        }
-
-        characterModel.onCharactersRequested()
-        _characters.value = characterModel.characters.value
+    suspend fun getCharacters() {
+        view?.showProgress()
+        model.requestCharacters(this)
     }
 
-    override fun onDestroy() {
+    override suspend fun onResultSuccess(
+        charactersUpdate: List<CharactersQuery.Result?>?,
+        characterUpdate: CharacterQuery.Character?
+    ) {
+        if (charactersUpdate?.isNotEmpty() == true) {
+            view?.hideProgress()
+            view?.setData(charactersUpdate = charactersUpdate)
+        }
+    }
+
+    override suspend fun onResultFail(error: String) {
+        view?.hideProgress()
+        view?.showError(error)
+    }
+
+    fun onDestroy() {
         view = null
     }
-
-
 }
