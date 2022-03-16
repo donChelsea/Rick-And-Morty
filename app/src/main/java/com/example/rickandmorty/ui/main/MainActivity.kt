@@ -79,11 +79,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_home -> {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                true
-            }
             R.id.action_favorites -> {
                 val intent = Intent(this, FavoritesActivity::class.java)
                 startActivity(intent)
