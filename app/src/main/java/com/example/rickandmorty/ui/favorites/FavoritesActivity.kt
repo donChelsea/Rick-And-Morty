@@ -1,17 +1,15 @@
 package com.example.rickandmorty.ui.favorites
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.ActivityFavoritesBinding
-import com.example.rickandmorty.ui.main.MainActivity
+import kotlinx.coroutines.launch
+
 
 class FavoritesActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityFavoritesBinding
@@ -32,48 +30,52 @@ class FavoritesActivity : AppCompatActivity(), Contract.View {
     override fun setData(
         charactersUpdate: List<CharactersQuery.Result?>?,
         characterUpdate: CharacterQuery.Character?,
-        savedData: MutableMap<String, *>?
+        savedData: List<Pair<String, Any?>>?
     ) {
-        Log.d("FavoritesActivity", savedData.toString())
+        binding.apply {
+            savedData?.let { favorites ->
+                recyclerview.adapter = FavoritesAdapter(favorites) {pair -> onFavoriteClicked(pair)}
+            }
+        }
+    }
+
+    private fun onFavoriteClicked(pair: Pair<String, Any?>) {
+        remove(pair)
+    }
+
+    private fun remove(pair: Pair<String, Any?>) {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("Remove ${pair.second}?")
+            .setCancelable(false)
+            .setPositiveButton("Proceed") { _, _ ->
+                lifecycleScope.launch { presenter.remove(pair.first) }
+                finish()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val alert = dialogBuilder.create()
+        alert.setTitle("Delete")
+        alert.show()
     }
 
     override fun showError(error: String) {
-        Log.d("FavoritesActivity", error)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.options_menu, menu)
-        return true
+        showProgress()
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
 
     override fun showProgress() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
-//            recyclerview.visibility = View.INVISIBLE
+            recyclerview.visibility = View.INVISIBLE
         }
     }
 
     override fun hideProgress() {
         binding.apply {
             progressBar.visibility = View.GONE
-//            recyclerview.visibility = View.VISIBLE
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_home -> {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.action_favorites -> {
-                val intent = Intent(this, FavoritesActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+            recyclerview.visibility = View.VISIBLE
         }
     }
 

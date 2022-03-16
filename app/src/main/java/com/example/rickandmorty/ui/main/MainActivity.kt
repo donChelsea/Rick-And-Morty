@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), Contract.View {
     override fun setData(
         charactersUpdate: List<CharactersQuery.Result?>?,
         characterUpdate: CharacterQuery.Character?,
-        savedData: MutableMap<String, *>?
+        savedData: List<Pair<String, Any?>>?
     ) {
         binding.apply {
             charactersUpdate?.let {

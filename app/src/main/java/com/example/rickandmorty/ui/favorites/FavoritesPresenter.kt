@@ -23,7 +23,7 @@ class FavoritesPresenter(
         getData()
     }
 
-    override suspend fun onResultSuccess(data: MutableMap<String, *>) {
+    override suspend fun onResultSuccess(data: List<Pair<String, Any?>>) {
         view?.setData(savedData = data)
         view?.hideProgress()
     }

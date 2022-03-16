@@ -1,7 +1,6 @@
 package com.example.rickandmorty
 
 import android.content.Context
-import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 
 interface Contract {
@@ -12,7 +11,7 @@ interface Contract {
         fun setData(
             charactersUpdate: List<CharactersQuery.Result?>? = null,
             characterUpdate: CharacterQuery.Character? = null,
-            savedData: MutableMap<String, *>? = null
+            savedData: List<Pair<String, Any?>>? = null
         )
         fun showError(error: String)
     }
@@ -62,7 +61,7 @@ class CharacterModel {
 class SharedPreferencesModel(context: Context) {
 
     interface OnFinishedListener {
-        suspend fun onResultSuccess(data: MutableMap<String, *>)
+        suspend fun onResultSuccess(data: List<Pair<String, Any?>>)
 
         suspend fun onResultFailure(error: String)
     }
@@ -71,8 +70,8 @@ class SharedPreferencesModel(context: Context) {
     private var editor = pref.edit()
 
     suspend fun getCharacters(onFinishedListener: OnFinishedListener) {
-        val response = pref.all
-        if (response != null) {
+        val response = pref.all.toList()
+        if (response.isNotEmpty()) {
             onFinishedListener.onResultSuccess(response)
         } else {
             onFinishedListener.onResultFailure("No characters stored.")

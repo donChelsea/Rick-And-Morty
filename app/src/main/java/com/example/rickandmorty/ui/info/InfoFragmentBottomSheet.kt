@@ -1,7 +1,6 @@
 package com.example.rickandmorty.ui.info
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +44,7 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     override fun setData(
         charactersUpdate: List<CharactersQuery.Result?>?,
         characterUpdate: CharacterQuery.Character?,
-        savedData: MutableMap<String, *>?
+        savedData: List<Pair<String, Any?>>?
     ) {
         binding.apply {
             characterUpdate?.let { char ->
@@ -59,6 +58,7 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
                 favoriteIcon.setOnClickListener {
                     lifecycleScope.launchWhenResumed {
                         favPresenter.add(infoPresenter.characterId, char.name.toString())
+                        Toast.makeText(requireContext(), "Added ${char.name.toString()} to favorites!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
