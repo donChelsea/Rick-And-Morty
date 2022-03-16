@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.ActivityMainBinding
+import com.example.rickandmorty.ui.details.DetailsFragmentBottomSheet
 import com.example.rickandmorty.ui.favorites.FavoritesActivity
-import com.example.rickandmorty.ui.info.InfoFragmentBottomSheet
 
 class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityMainBinding
@@ -45,10 +45,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
     }
 
     private fun onCharacterClicked(character: CharactersQuery.Result?) {
-        val infoFragment = InfoFragmentBottomSheet.newInstance(character?.id)
+        val infoFragment = DetailsFragmentBottomSheet.newInstance(character?.id)
         infoFragment.show(
             supportFragmentManager,
-            InfoFragmentBottomSheet.TAG
+            DetailsFragmentBottomSheet.TAG
         )
     }
 

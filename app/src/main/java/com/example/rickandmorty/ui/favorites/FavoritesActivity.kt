@@ -10,7 +10,6 @@ import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.ActivityFavoritesBinding
 import kotlinx.coroutines.launch
 
-
 class FavoritesActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityFavoritesBinding
     private lateinit var presenter: FavoritesPresenter

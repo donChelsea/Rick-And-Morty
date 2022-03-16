@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui.info
+package com.example.rickandmorty.ui.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,37 +7,38 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.*
-import com.example.rickandmorty.databinding.InfoBottomSheetDialogBinding
+import com.example.rickandmorty.databinding.DetailsBottomSheetDialogBinding
 import com.example.rickandmorty.ui.favorites.FavoritesPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
 
-class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
-    private lateinit var binding: InfoBottomSheetDialogBinding
-    private lateinit var infoPresenter: InfoPresenter
-    private lateinit var favPresenter: FavoritesPresenter
+class DetailsFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
+    private lateinit var binding: DetailsBottomSheetDialogBinding
+    private lateinit var detailsPresenter: DetailsPresenter
+    private lateinit var favsPresenter: FavoritesPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        infoPresenter = InfoPresenter(this, CharacterModel())
-        infoPresenter.characterId = arguments?.getString(ARG_ID).toString()
+
+        detailsPresenter = DetailsPresenter(this, CharacterModel())
+        detailsPresenter.characterId = arguments?.getString(ARG_ID).toString()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = InfoBottomSheetDialogBinding.inflate(inflater, container, false)
+        binding = DetailsBottomSheetDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        favPresenter = FavoritesPresenter(this, SharedPreferencesModel(requireContext()))
+        favsPresenter = FavoritesPresenter(this, SharedPreferencesModel(requireContext()))
 
         lifecycleScope.launchWhenStarted {
-            infoPresenter.getCharacter(infoPresenter.characterId)
+            detailsPresenter.getCharacter(detailsPresenter.characterId)
         }
     }
 
@@ -57,7 +58,7 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
 
                 favoriteIcon.setOnClickListener {
                     lifecycleScope.launchWhenResumed {
-                        favPresenter.add(infoPresenter.characterId, char.name.toString())
+                        favsPresenter.add(detailsPresenter.characterId, char.name.toString())
                         Toast.makeText(requireContext(), "Added ${char.name.toString()} to favorites!", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -67,7 +68,7 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
 
     override fun showError(error: String) {
         showProgress()
-        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
     }
 
     override fun showProgress() {
@@ -86,15 +87,15 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        infoPresenter.onDestroy()
+        detailsPresenter.onDestroy()
     }
 
     companion object {
         const val TAG = "InfoFragmentBottomSheet"
         private const val ARG_ID = "id"
 
-        fun newInstance(id: String?): InfoFragmentBottomSheet {
-            val infoBottomSheet = InfoFragmentBottomSheet()
+        fun newInstance(id: String?): DetailsFragmentBottomSheet {
+            val infoBottomSheet = DetailsFragmentBottomSheet()
             val bundle = Bundle()
             bundle.putString(ARG_ID, id)
             infoBottomSheet.arguments = bundle

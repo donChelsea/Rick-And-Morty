@@ -3,7 +3,6 @@ package com.example.rickandmorty.ui.favorites
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.databinding.ItemViewFavoritesBinding
 
 class FavoritesAdapter(
