@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.ActivityMainBinding
+import com.example.rickandmorty.ui.favorites.FavoritesActivity
 import com.example.rickandmorty.ui.info.InfoFragmentBottomSheet
 
 class MainActivity : AppCompatActivity(), Contract.View {
@@ -31,7 +32,8 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
     override fun setData(
         charactersUpdate: List<CharactersQuery.Result?>?,
-        characterUpdate: CharacterQuery.Character?
+        characterUpdate: CharacterQuery.Character?,
+        savedData: MutableMap<String, *>?
     ) {
         binding.apply {
             charactersUpdate?.let {
@@ -83,8 +85,8 @@ class MainActivity : AppCompatActivity(), Contract.View {
                 true
             }
             R.id.action_favorites -> {
-//                val intent = Intent(this, FavoritesActivity::class.java)
-//                startActivity(intent)
+                val intent = Intent(this, FavoritesActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

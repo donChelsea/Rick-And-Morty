@@ -25,7 +25,7 @@ class MainPresenter (
         }
     }
 
-    override suspend fun onResultFail(error: String) {
+    override suspend fun onResultFailure(error: String) {
         view?.hideProgress()
         view?.showError(error)
     }

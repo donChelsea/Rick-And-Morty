@@ -9,19 +9,19 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.InfoBottomSheetDialogBinding
-import com.example.rickandmorty.ui.main.CharactersAdapter
-import com.example.rickandmorty.ui.main.MainPresenter
+import com.example.rickandmorty.ui.favorites.FavoritesPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
 
 class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     private lateinit var binding: InfoBottomSheetDialogBinding
-    private lateinit var presenter: InfoPresenter
+    private lateinit var infoPresenter: InfoPresenter
+    private lateinit var favPresenter: FavoritesPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = InfoPresenter(this, CharacterModel())
-        presenter.characterId = arguments?.getString(ARG_ID).toString()
+        infoPresenter = InfoPresenter(this, CharacterModel())
+        infoPresenter.characterId = arguments?.getString(ARG_ID).toString()
     }
 
     override fun onCreateView(
@@ -35,23 +35,32 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        favPresenter = FavoritesPresenter(this, SharedPreferencesModel(requireContext()))
+
         lifecycleScope.launchWhenStarted {
-            presenter.getCharacter(presenter.characterId)
+            infoPresenter.getCharacter(infoPresenter.characterId)
         }
     }
 
     override fun setData(
         charactersUpdate: List<CharactersQuery.Result?>?,
-        characterUpdate: CharacterQuery.Character?
+        characterUpdate: CharacterQuery.Character?,
+        savedData: MutableMap<String, *>?
     ) {
         binding.apply {
-            characterUpdate?.let {
-                name.text = it.name
-                species.text = String.format(getString(R.string.species), it.species)
-                origin.text = String.format(getString(R.string.origin), it.origin?.name)
-                location.text = String.format(getString(R.string.location), it.location?.name)
-                Picasso.get().load(it.image).into(image)
+            characterUpdate?.let { char ->
+                name.text = char.name
+                species.text = String.format(getString(R.string.species), char.species)
+                origin.text = String.format(getString(R.string.origin), char.origin?.name)
+                location.text = String.format(getString(R.string.location), char.location?.name)
+                Picasso.get().load(char.image).into(image)
                 hideProgress()
+
+                favoriteIcon.setOnClickListener {
+                    lifecycleScope.launchWhenResumed {
+                        favPresenter.add(infoPresenter.characterId, char.name.toString())
+                    }
+                }
             }
         }
     }
@@ -77,7 +86,7 @@ class InfoFragmentBottomSheet : BottomSheetDialogFragment(), Contract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onDestroy()
+        infoPresenter.onDestroy()
     }
 
     companion object {

@@ -1,22 +1,39 @@
 package com.example.rickandmorty.ui.favorites
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.rickandmorty.CharacterQuery
-import com.example.rickandmorty.CharactersQuery
 import com.example.rickandmorty.Contract
-import com.example.rickandmorty.network.apolloClient
+import com.example.rickandmorty.SharedPreferencesModel
 
 class FavoritesPresenter(
     private var view: Contract.View?,
-) : Contract.Presenter {
+    private val model: SharedPreferencesModel
+) : SharedPreferencesModel.OnFinishedListener {
 
-    override suspend fun getData() {
-        TODO("Not yet implemented")
+    suspend fun getData() {
+        view?.showProgress()
+        model.getCharacters(this)
     }
 
-    override fun onDestroy() {
+    suspend fun add(id: String, name: String) {
+        model.put(id, name)
+        getData()
+    }
+
+    suspend fun remove(id: String) {
+        model.remove(id)
+        getData()
+    }
+
+    override suspend fun onResultSuccess(data: MutableMap<String, *>) {
+        view?.setData(savedData = data)
+        view?.hideProgress()
+    }
+
+    override suspend fun onResultFailure(error: String) {
+        view?.showError(error)
+        view?.hideProgress()
+    }
+
+    fun onDestroy() {
         view = null
     }
-
 }

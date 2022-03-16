@@ -1,26 +1,50 @@
 package com.example.rickandmorty.ui.favorites
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import com.example.rickandmorty.Contract
-import com.example.rickandmorty.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.rickandmorty.*
 import com.example.rickandmorty.databinding.ActivityFavoritesBinding
 import com.example.rickandmorty.ui.main.MainActivity
-import com.example.rickandmorty.ui.main.MainPresenter
 
 class FavoritesActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityFavoritesBinding
-    private val presenter = FavoritesPresenter(this)
+    private lateinit var presenter: FavoritesPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        presenter = FavoritesPresenter(this, SharedPreferencesModel(this))
+
+        lifecycleScope.launchWhenStarted {
+            presenter.getData()
+        }
+    }
+
+    override fun setData(
+        charactersUpdate: List<CharactersQuery.Result?>?,
+        characterUpdate: CharacterQuery.Character?,
+        savedData: MutableMap<String, *>?
+    ) {
+        Log.d("FavoritesActivity", savedData.toString())
+    }
+
+    override fun showError(error: String) {
+        Log.d("FavoritesActivity", error)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.options_menu, menu)
+        return true
     }
 
     override fun showProgress() {
@@ -35,12 +59,6 @@ class FavoritesActivity : AppCompatActivity(), Contract.View {
             progressBar.visibility = View.GONE
 //            recyclerview.visibility = View.VISIBLE
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.options_menu, menu)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
