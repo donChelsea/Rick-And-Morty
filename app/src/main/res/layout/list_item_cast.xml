@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginHorizontal="16dp"
+    android:elevation="10dp"
+    app:cardCornerRadius="10dp"
+    android:id="@+id/castRootView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/cast_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/cast_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@id/status_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cast_image"
+            app:layout_constraintTop_toTopOf="@+id/cast_image"
+            tools:text="Rick Sanchez" />
+
+        <TextView
+            android:id="@+id/status_text"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="12dp"
+            app:drawableLeftCompat="@drawable/ic_circle_red"
+            app:layout_constraintBottom_toBottomOf="@id/cast_image"
+            app:layout_constraintEnd_toEndOf="@id/cast_name"
+            app:layout_constraintStart_toStartOf="@id/cast_name"
+            app:layout_constraintTop_toBottomOf="@+id/cast_name"
+            tools:text="Alive" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
