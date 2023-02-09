@@ -43,7 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawablePadding="12dp"
-            app:drawableLeftCompat="@drawable/ic_circle_red"
+            app:drawableLeftCompat="@drawable/ic_circle_green"
             app:layout_constraintBottom_toBottomOf="@id/cast_image"
             app:layout_constraintEnd_toEndOf="@id/cast_name"
             app:layout_constraintStart_toStartOf="@id/cast_name"

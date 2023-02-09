@@ -2,4 +2,8 @@
     <string name="app_name">RickAndMorty</string>
     <string name="home">Home</string>
     <string name="meet_the_cast">Meet The Cast</string>
+    <string name="origin">Origin</string>
+    <string name="status">Status</string>
+    <string name="location">Location</string>
+    <string name="details">Details</string>
 </resources>

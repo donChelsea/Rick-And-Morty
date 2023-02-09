@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentHomeBinding
+import com.example.rickandmorty.domain.models.Character
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,11 +34,16 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { result ->
                 binding.apply {
-                    val adapter = CastAdapter(result, requireContext())
+                    val adapter = CastAdapter(result, requireContext()) { character -> onClick(character) }
                     recyclerview.adapter = adapter
                 }
             }
         }
+    }
+
+    private fun onClick(character: Character) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(character)
+        view?.findNavController()?.navigate(action)
     }
 
 }
