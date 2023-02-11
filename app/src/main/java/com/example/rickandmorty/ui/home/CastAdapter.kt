@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -37,6 +38,9 @@ class CastAdapter(
 
                 Picasso.get().load(character.image).placeholder(R.mipmap.ic_launcher).into(castImage)
                 castName.text = character.name
+                addToFavoritesButton.setOnClickListener {
+                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
+                }
 
                 val statusDrawable = if (character.status == "Alive") R.drawable.ic_circle_green else R.drawable.ic_circle_red
                 statusText.text = character.status

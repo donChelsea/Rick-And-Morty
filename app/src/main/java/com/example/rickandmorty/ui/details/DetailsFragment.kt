@@ -2,8 +2,12 @@ package com.example.rickandmorty.ui.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -12,16 +16,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentDetailsBinding
-import com.example.rickandmorty.domain.models.Episode
 import com.example.rickandmorty.domain.models.Character
+import com.example.rickandmorty.domain.models.Episode
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding
     private val viewModel by viewModels<DetailsViewModel>()
     private val args by navArgs<DetailsFragmentArgs>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,5 +84,19 @@ class DetailsFragment : Fragment() {
         println(episode.name)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.details_menu, menu)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.add_to_favorites -> {
+                Toast.makeText(requireContext(), "Added to favorites", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            else -> {}
+        }
+        return false
+    }
 }

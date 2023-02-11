@@ -10,4 +10,5 @@
     <color name="alive_green">#4CAF50</color>
     <color name="dead_red">#D50000</color>
     <color name="grey">#C9D5D6D6</color>
+    <color name="dark_grey">#C97D7E7E</color>
 </resources>

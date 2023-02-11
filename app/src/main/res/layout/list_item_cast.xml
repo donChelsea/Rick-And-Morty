@@ -45,9 +45,20 @@
             android:drawablePadding="12dp"
             app:drawableLeftCompat="@drawable/ic_circle_green"
             app:layout_constraintBottom_toBottomOf="@id/cast_image"
-            app:layout_constraintEnd_toEndOf="@id/cast_name"
+            app:layout_constraintEnd_toStartOf="@id/add_to_favorites_button"
             app:layout_constraintStart_toStartOf="@id/cast_name"
             app:layout_constraintTop_toBottomOf="@+id/cast_name"
             tools:text="Alive" />
+
+        <ImageView
+            android:id="@+id/add_to_favorites_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_box"
+            app:layout_constraintTop_toTopOf="@id/status_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/status_text"
+            android:padding="16dp"
+            app:tint="@color/dark_grey" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
