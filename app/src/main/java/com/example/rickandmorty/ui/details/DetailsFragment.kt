@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentDetailsBinding
 import com.example.rickandmorty.domain.models.Episode
+import com.example.rickandmorty.domain.models.Character
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,11 +43,11 @@ class DetailsFragment : Fragment() {
                     viewModel.postEvent(DetailsUiEvent.GetSingleEpisodeAppearance(episode = character.episodes))
                 }
 
+                viewModel.postEvent(DetailsUiEvent.GetLocation(character.location.id))
+
                 binding.apply {
                     val statusLabelColor = if (character.status == "Alive") R.color.alive_green else R.color.dead_red
                     statusLabel.setBackgroundColor(ContextCompat.getColor(requireContext(), statusLabelColor))
-
-                    println(character.episodes)
 
                     name.text = character.name
                     statusText.text = character.status
@@ -59,15 +60,19 @@ class DetailsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
-                binding.recyclerview.apply {
-                    this.adapter = EpisodesAdapter(state.episodes) { episode -> onEpisodesClick(episode) }
-                }
+                binding.appearancesRecyclerview.adapter = EpisodesAdapter(state.episodes) { episode -> onEpisodesClick(episode) }
+                binding.residentsRecyclerview.adapter = ResidentsAdapter(state.residents) { resident -> onResidentClick(resident) }
             }
         }
+    }
+
+    private fun onResidentClick(resident: Character) {
+        println(resident.name)
     }
 
     private fun onEpisodesClick(episode: Episode) {
         println(episode.name)
     }
+
 
 }

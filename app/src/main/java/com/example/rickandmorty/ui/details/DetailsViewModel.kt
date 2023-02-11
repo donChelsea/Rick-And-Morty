@@ -25,12 +25,13 @@ class DetailsViewModel @Inject constructor(
         when (event) {
             is DetailsUiEvent.GetAllEpisodeAppearances -> getAllEpisodes(event.episodesString)
             is DetailsUiEvent.GetSingleEpisodeAppearance -> getSingleEpisode(event.episode)
+            is DetailsUiEvent.GetLocation -> getLocation(event.locationId)
         }
     }
 
     private fun getAllEpisodes(episodesString: String) {
         viewModelScope.launch {
-            repository.getAllEpisodes(episodesString).collect { result ->
+            repository.getMultipleEpisodes(episodesString).collect { result ->
                 when (result) {
                     is Resource.Loading -> println("Loading: " + result.isLoading)
                     is Resource.Success -> _state.update { it.copy(episodes = result.data.orEmpty()) }
@@ -51,16 +52,43 @@ class DetailsViewModel @Inject constructor(
             }
         }
     }
+    private fun getLocation(locationId: String) {
+        viewModelScope.launch {
+            repository.getSingleLocation(locationId).collect { result ->
+                when (result) {
+                    is Resource.Loading -> _state.update { it.copy(isLoading = result.isLoading) }
+                    is Resource.Success -> {
+                        getResidentsFromLocation(result.data?.residents.orEmpty())
+                    }
+                    is Resource.Error -> println("Error: " + result.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun getResidentsFromLocation(charactersString: String) {
+        viewModelScope.launch {
+            repository.getMultipleCharacters(charactersString).collect { result ->
+                when (result) {
+                    is Resource.Loading -> _state.update { it.copy(isLoading = result.isLoading) }
+                    is Resource.Success -> _state.update { it.copy(residents = result.data.orEmpty()) }
+                    is Resource.Error -> println("Error: " + result.message.toString())
+                }
+            }
+        }
+    }
 
 }
 
 sealed class DetailsUiEvent {
     data class GetAllEpisodeAppearances(val episodesString: String) : DetailsUiEvent()
     data class GetSingleEpisodeAppearance(val episode: String) : DetailsUiEvent()
+    data class GetLocation(val locationId: String) : DetailsUiEvent()
 }
 
 data class DetailsUiState(
     val character: Character? = null,
+    val residents: List<Character> = emptyList(),
     val episodes: List<Episode> = emptyList(),
     val isLoading: Boolean = false,
 )

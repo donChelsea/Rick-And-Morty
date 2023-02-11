@@ -170,12 +170,33 @@
             app:layout_constraintTop_toBottomOf="@id/location"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+            android:id="@+id/appearances_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/list_item_episode"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/appearances_label"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <TextView
+            android:id="@+id/residents_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/neighbors"
+            android:layout_margin="32dp"
+            android:textStyle="bold"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            app:layout_constraintTop_toBottomOf="@id/appearances_recyclerview"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/residents_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/list_item_resident"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/residents_label"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 

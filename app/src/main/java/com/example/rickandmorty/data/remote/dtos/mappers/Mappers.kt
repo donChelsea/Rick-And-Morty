@@ -20,7 +20,12 @@ fun CharacterDto.toDomain() = Character(
     episodes = episodes.joinToString(",") { it.filter { char -> char.isDigit() } }
 )
 
-fun LocationDto.toDomain() = Location(name = name)
+fun LocationDto.toDomain() = Location(
+    name = name,
+    id = id.filter { char -> char.isDigit() },
+    type = type,
+    residents = residents?.joinToString(",") { it.filter { char -> char.isDigit() } }.toString()
+)
 
 fun OriginDto.toDomain() = Origin(name = name)
 
