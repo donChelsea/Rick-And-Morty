@@ -1,9 +1,11 @@
-package com.example.rickandmorty.data.remote
+package com.example.rickandmorty.data.remote.dtos.mappers
 
 import com.example.rickandmorty.data.remote.dtos.CharacterDto
+import com.example.rickandmorty.data.remote.dtos.EpisodeDto
 import com.example.rickandmorty.data.remote.dtos.LocationDto
 import com.example.rickandmorty.data.remote.dtos.OriginDto
 import com.example.rickandmorty.domain.models.Character
+import com.example.rickandmorty.domain.models.Episode
 import com.example.rickandmorty.domain.models.Location
 import com.example.rickandmorty.domain.models.Origin
 
@@ -15,8 +17,17 @@ fun CharacterDto.toDomain() = Character(
     image = image,
     origin = origin.toDomain(),
     location = location.toDomain(),
+    episodes = episodes.joinToString(",") { it.filter { char -> char.isDigit() } }
 )
 
 fun LocationDto.toDomain() = Location(name = name)
 
 fun OriginDto.toDomain() = Origin(name = name)
+
+fun EpisodeDto.toDomain() = Episode(
+    id = id,
+    name = name,
+    characters = characters,
+    order = order,
+    airDate = airDate,
+)

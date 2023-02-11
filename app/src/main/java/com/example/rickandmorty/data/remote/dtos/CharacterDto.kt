@@ -1,5 +1,7 @@
 package com.example.rickandmorty.data.remote.dtos
 
+import com.google.gson.annotations.SerializedName
+
 data class CharacterDto(
     val id: Int,
     val name: String,
@@ -8,4 +10,6 @@ data class CharacterDto(
     val image: String,
     val origin: OriginDto,
     val location: LocationDto,
+    @SerializedName("episode")
+    val episodes: List<String>,
 )

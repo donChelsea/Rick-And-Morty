@@ -12,8 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentDetailsBinding
-import com.example.rickandmorty.databinding.FragmentHomeBinding
-import com.example.rickandmorty.ui.home.HomeViewModel
+import com.example.rickandmorty.domain.models.Episode
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +28,6 @@ class DetailsFragment : Fragment() {
     ): View {
         binding = FragmentDetailsBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.details)
-        viewModel.postEvent(DetailsUiEvent.UpdateCharacter(args.character))
         return binding.root
     }
 
@@ -37,23 +35,39 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.state.collect {
-                it?.let { character ->
-                    binding.apply {
-                        val statusLabelColor = if (character.status == "Alive") R.color.alive_green else R.color.dead_red
-                        statusLabel.setBackgroundColor(ContextCompat.getColor(requireContext(), statusLabelColor))
+            args.character.let { character ->
+                if (character.episodes.contains(",")) {
+                    viewModel.postEvent(DetailsUiEvent.GetAllEpisodeAppearances(episodesString = character.episodes))
+                } else {
+                    viewModel.postEvent(DetailsUiEvent.GetSingleEpisodeAppearance(episode = character.episodes))
+                }
 
-                        name.text = character.name
-                        statusText.text = character.status
-                        originText.text = character.origin.name
-                        locationText.text = character.location.name
-                        Picasso.get().load(character.image).placeholder(R.mipmap.ic_launcher).into(image)
-                    }
+                binding.apply {
+                    val statusLabelColor = if (character.status == "Alive") R.color.alive_green else R.color.dead_red
+                    statusLabel.setBackgroundColor(ContextCompat.getColor(requireContext(), statusLabelColor))
+
+                    println(character.episodes)
+
+                    name.text = character.name
+                    statusText.text = character.status
+                    originText.text = character.origin.name
+                    locationText.text = character.location.name
+                    Picasso.get().load(character.image).placeholder(R.mipmap.ic_launcher).into(image)
                 }
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                binding.recyclerview.apply {
+                    this.adapter = EpisodesAdapter(state.episodes) { episode -> onEpisodesClick(episode) }
+                }
+            }
+        }
+    }
 
+    private fun onEpisodesClick(episode: Episode) {
+        println(episode.name)
     }
 
 }
