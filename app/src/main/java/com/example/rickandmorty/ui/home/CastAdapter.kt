@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -16,7 +15,7 @@ import com.squareup.picasso.Picasso
 class CastAdapter(
     private val characters: List<Character>,
     private val context: Context,
-    private val clickListener: (Character) -> Unit
+    private val clickListener: HomeFragmentClickListener
 ) : Adapter<CastAdapter.CastViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastViewHolder {
         val view = ListItemCastBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,13 +33,11 @@ class CastAdapter(
     inner class CastViewHolder(private val binding: ListItemCastBinding) : ViewHolder(binding.root) {
         fun bind(character: Character) {
             binding.apply {
-                root.setOnClickListener { clickListener(character) }
+                root.setOnClickListener { clickListener.onCharacterClick(character) }
+                addToFavoritesButton.setOnClickListener { clickListener.onAddToFavorites(character) }
 
                 Picasso.get().load(character.image).placeholder(R.mipmap.ic_launcher).into(castImage)
                 castName.text = character.name
-                addToFavoritesButton.setOnClickListener {
-                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
-                }
 
                 val statusDrawable = if (character.status == "Alive") R.drawable.ic_circle_green else R.drawable.ic_circle_red
                 statusText.text = character.status
