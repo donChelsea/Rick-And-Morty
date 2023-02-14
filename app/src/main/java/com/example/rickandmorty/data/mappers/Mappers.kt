@@ -1,5 +1,6 @@
-package com.example.rickandmorty.data.remote.dtos.mappers
+package com.example.rickandmorty.data.mappers
 
+import com.example.rickandmorty.data.local.CharacterEntity
 import com.example.rickandmorty.data.remote.dtos.CharacterDto
 import com.example.rickandmorty.data.remote.dtos.EpisodeDto
 import com.example.rickandmorty.data.remote.dtos.LocationDto
@@ -35,4 +36,23 @@ fun EpisodeDto.toDomain() = Episode(
     characters = characters,
     order = order,
     airDate = airDate,
+)
+
+fun CharacterEntity.toDomain() = Character(
+    id = id,
+    name = name,
+    species = species,
+    status = status,
+    image = image,
+    origin = null,
+    location = null,
+    episodes = null,
+)
+
+fun Character.toEntity() = CharacterEntity(
+    id = id,
+    name = name,
+    species = species,
+    status = status,
+    image = image,
 )

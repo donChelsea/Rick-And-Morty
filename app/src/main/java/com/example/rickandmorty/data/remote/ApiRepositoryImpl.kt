@@ -1,7 +1,7 @@
 package com.example.rickandmorty.data.remote
 
 import com.example.rickandmorty.data.remote.dtos.CharacterDto
-import com.example.rickandmorty.data.remote.dtos.mappers.toDomain
+import com.example.rickandmorty.data.mappers.toDomain
 import com.example.rickandmorty.util.Resource
 import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.domain.models.Episode

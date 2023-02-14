@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
         }
 
         override fun onAddToFavorites(character: Character) {
-            println(character.toString())
+            viewModel.postEvent(HomeUiEvent.AddToFavorites(character))
         }
     }
 

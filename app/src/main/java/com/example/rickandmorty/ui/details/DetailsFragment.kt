@@ -47,22 +47,22 @@ class DetailsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             args.character.let { character ->
-                if (character.episodes.contains(",")) {
-                    viewModel.postEvent(DetailsUiEvent.GetAllEpisodeAppearances(episodesString = character.episodes))
+                if (character.episodes.orEmpty().contains(",")) {
+                    viewModel.postEvent(DetailsUiEvent.GetAllEpisodeAppearances(episodesString = character.episodes.orEmpty()))
                 } else {
-                    viewModel.postEvent(DetailsUiEvent.GetSingleEpisodeAppearance(episode = character.episodes))
+                    viewModel.postEvent(DetailsUiEvent.GetSingleEpisodeAppearance(episode = character.episodes.orEmpty()))
                 }
-
-                viewModel.postEvent(DetailsUiEvent.GetLocation(character.location.id))
-
+                character.location?.id?.let {
+                    viewModel.postEvent(DetailsUiEvent.GetLocation(it))
+                }
                 binding.apply {
                     val statusLabelColor = if (character.status == "Alive") R.color.alive_green else R.color.dead_red
                     statusLabel.setBackgroundColor(ContextCompat.getColor(requireContext(), statusLabelColor))
 
                     name.text = character.name
                     statusText.text = character.status
-                    originText.text = character.origin.name
-                    locationText.text = character.location.name
+                    originText.text = character.origin?.name
+                    locationText.text = character.location?.name
                     Picasso.get().load(character.image).placeholder(R.mipmap.ic_launcher).into(image)
                 }
             }
