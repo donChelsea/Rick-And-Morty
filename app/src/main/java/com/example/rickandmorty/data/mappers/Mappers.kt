@@ -44,9 +44,9 @@ fun CharacterEntity.toDomain() = Character(
     species = species,
     status = status,
     image = image,
-    origin = null,
-    location = null,
-    episodes = null,
+    origin = origin,
+    location = location,
+    episodes = episodes,
 )
 
 fun Character.toEntity() = CharacterEntity(
@@ -55,4 +55,7 @@ fun Character.toEntity() = CharacterEntity(
     species = species,
     status = status,
     image = image,
+    origin = origin,
+    location = location,
+    episodes = episodes,
 )
